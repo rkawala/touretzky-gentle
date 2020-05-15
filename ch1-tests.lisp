@@ -14,7 +14,6 @@
   (testing "array position"
     (let ((ary #(1 2 3 4 5)))
       (ok (= (position 4 ary) 3))
-      (ok (= (position-if #'evenp ary) 1)))
+      (ok (= (position-if #'evenp ary) 1))
       (ng (eql (position-if #'evenp #(1 3 5)) 1))
-      (skip "okay"))
-  )
+      (skip "okay"))))
