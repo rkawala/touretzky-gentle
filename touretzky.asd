@@ -6,6 +6,8 @@
   :license  "Private"
   :version "0.0.1"
   :serial t
+  :depends-on (#:rove)
   :components ((:file "package")
                (:file "touretzky")
                (:file "ch1-tests")))
+
