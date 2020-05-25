@@ -1,14 +1,19 @@
 (in-package #:touretzky)
 
-(defun rick (x)
-  (+ x 1))
+(deftest ch2-13
+    (testing "fun in the sun"
+             (let ((a1 '(((fun) (in the) (sun)))))
+               (ok (eq 'fun (caaar a1)))
+               (break)
+               (ok (eq 'in (cadaar a1)))
+               (ok (eq 'the (caddr a1))))))
 
 (deftest array-length
   (testing "array length"
     (let ((ary #(1 2 3 4 5)))
       (ok (= (length ary) 5))
       (ng (= (length ary) 3))
-      (ok (signals (length 1))))))
+      (ok (signals (error "foo"))))))
 
 (deftest array-position
   (testing "array position"
