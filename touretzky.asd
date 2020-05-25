@@ -9,5 +9,5 @@
   :depends-on (#:rove)
   :components ((:file "package")
                (:file "touretzky")
-               (:file "ch1-tests")))
+               (:file "ch2-tests")))
 
