@@ -2,11 +2,11 @@
 
 (deftest ch2-13
     (testing "fun in the sun"
-             (let ((a1 '(((fun) (in the) (sun)))))
+             (let ((a1 '(((fun)) (in the) (sun))))
                (ok (eq 'fun (caaar a1)))
-               (ok (eq 'in (caadar a1)))
-               (ok (eq 'the (car (cdadar a1))))
-               (ok (eq 'sun (car (caddar a1)))))))
+               (ok (eq 'in (caadr a1)))
+               (ok (eq 'the (cadadr a1)))
+               (ok (eq 'sun (caaddr a1))))))
 
 (deftest array-length
   (testing "array length"
