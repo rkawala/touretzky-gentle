@@ -4,9 +4,9 @@
     (testing "fun in the sun"
              (let ((a1 '(((fun) (in the) (sun)))))
                (ok (eq 'fun (caaar a1)))
-               (break)
-               (ok (eq 'in (cadaar a1)))
-               (ok (eq 'the (caddr a1))))))
+               (ok (eq 'in (caadar a1)))
+               (ok (eq 'the (car (cdadar a1))))
+               (ok (eq 'sun (car (caddar a1)))))))
 
 (deftest array-length
   (testing "array length"
