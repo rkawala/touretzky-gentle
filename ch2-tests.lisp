@@ -29,6 +29,34 @@
                (ok (eq 'the (cadadr a1)))
                (ok (eq 'sun (caaddr a1))))))
 
+(deftest ch2-15
+  (testing "more c...r"
+    (let ((a1 '((a b) (c d) (e f))))
+      (ok (equal '(a b) (car a1)))
+      (ok (equal '((e f)) (cddr a1)))
+      (ok (equal '(c d) (cadr a1)))
+      (ok (equal '(b) (cdar a1)))
+      (ok (eq 'b (cadar a1)))
+      (ok (null (cddar a1)))
+      (ok (eq 'a (caar a1)))
+      (ok (equal '(f) (cdaddr a1)))
+      (ok (eq 'f (car (cdaddr a1)))))))
+
+(deftest lisp-not-like-java
+  (testing "CAR and CDR of nil return nil rather than throwing an exception"
+    (ok (null (car nil)))
+    (ok (null (cdr nil)))))
+
+(deftest ch2-17
+  (testing "More CAR and CDRs"
+    (ok (eq 'post (car '(post no bills))))
+    (ok (equal '(no bills) (cdr '(post no bills))))
+    (ok (equal '(post no) (car '((post no) bills))))
+    (ok (null (cdr '(bills))))
+    ;; (ok (signals (car 'bills)))  ; illegal, but that's what the book asked for
+    (ok (equal '((no bills)) (cdr '(post (no bills)))))
+    (ok (null (cdr '((post no bills)))))
+    (ok (null (car nil)))))
 (deftest array-length
   (testing "array length"
     (let ((ary #(1 2 3 4 5)))
