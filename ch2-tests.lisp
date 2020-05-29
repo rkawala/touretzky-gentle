@@ -58,6 +58,49 @@
     (ok (null (cdr '((post no bills)))))
     (ok (null (car nil)))))
 
+(deftest sec2.11.1
+  (testing "nil and cons"
+    (ok (equal '(nil a b) (cons nil '(a b))))
+    (ok (equal '((a b)) (cons '(a b) nil)))
+    (ok (equal '(nil) (cons nil nil)))))
+
+(deftest ex2.18
+  (testing "given two inputs, create a list using cons"
+    (flet ((cons-up-a-list (x y) (cons x (cons y nil))))
+      (ok (equal '(foo bar) (cons-up-a-list 'foo 'bar))))))
+
+(deftest ex2.19
+  (testing "LIST and CONS results"
+    (ok (equal '(fred and wilma) (list 'fred 'and 'wilma)))
+    (ok (equal '(fred (and wilma)) (list 'fred '(and wilma))))
+    (ok (equal '(fred and wilma) (cons 'fred '(and wilma))))
+    (ok (equal '(nil) (cons nil nil)))
+    (ok (equal '(nil nil) (list nil nil)))))
+
+(deftest ex2.20
+  (testing "More LIST and CONS"
+    (ok (equal '(nil) (list nil)))
+    (ok (equal '(t nil) (list t nil)))
+    (ok (equal '(t) (cons t nil)))
+    (ok (equal '((t)) (cons '(t) nil)))
+    (ok (equal '((in one ear and) (out the other)) (list '(in one ear and) '(out the other))))
+    (ok (equal '((in one ear and) out the other) (cons '(in one ear and) '(out the other))))))
+
+(deftest ex2.21
+  (testing "function that combines 4 scalars into two lists"
+    (flet ((combine4 (e1 e2 e3 e4) (list (list e1 e2) (list e3 e4))))
+      (ok (equal '((foo bar) (baz quux)) (combine4 'foo 'bar 'baz 'quux))))))
+
+(deftest ex2.22
+  (testing "duo-cons"
+    (flet ((duo-cons (car1 car2 the-rest) (cons car1 (cons car2 the-rest))))
+      (ok (equal '(patrick seymour marvin) (duo-cons 'patrick 'seymour '(marvin)))))))
+
+(deftest ex2.23
+  (testing "two-deeper"
+    (flet ((two-deeper (x) (list (list x))))
+      (ok (equal '((moo)) (two-deeper 'moo))))))
+
 (deftest array-length
   (testing "array length"
     (let ((ary #(1 2 3 4 5)))
