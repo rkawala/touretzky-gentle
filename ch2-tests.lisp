@@ -101,6 +101,31 @@
     (flet ((two-deeper (x) (list (list x))))
       (ok (equal '((moo)) (two-deeper 'moo))))))
 
+(deftest sec2.15
+  (testing "nil is a list, but not a cons cell"
+    (ok (equal t (listp nil)))
+    (ok (null (consp nil)))))
+
+(deftest ex2.29
+  (testing "tally arithmetic: unary-add1"
+    (flet ((unary-add1 (num) (cons 'x num)))
+      (ok (equal '(x x x) (unary-add1 '(x x)))))))
+
+(deftest ex2.31
+  (testing "tally arithmetic: unary-zerop"
+    (flet ((unary-zerop (num) (= 0 (length num))))
+      (ok (unary-zerop nil))
+      (ok (unary-zerop '()))
+      (ok (not (unary-zerop '(x)))))))
+
+(deftest ex2.32
+  (testing "tally arithmetic: unary-greaterp"
+    (flet ((unary-greaterp (left right) (> (length left) (length right))))
+      (ok (not (unary-greaterp nil '())))
+      (ok (not (unary-greaterp '(x x) '(x x x))))
+      (ok (unary-greaterp '(x x x) '(x x)))
+      (ok (unary-greaterp '(x) nil)))))
+
 (deftest array-length
   (testing "array length"
     (let ((ary #(1 2 3 4 5)))
