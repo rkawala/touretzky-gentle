@@ -41,3 +41,25 @@
       (ok (= 2 (constrain 1 2 3)))
       (ok (= 3 (constrain 50 2 3)))
       (ok (= 199 (constrain 199 0 299))))))
+
+(deftest ex4.11
+  (testing "firstzero"
+    (labels ((check-digit (number-list symbol-list)
+               (cond ((= 0 (car number-list)) (car symbol-list))
+                     ((null (cdr number-list)) 'none)
+                     (t (check-digit (cdr number-list) (cdr symbol-list)))))
+             (firstzero (number-list) (check-digit number-list '(first second third))))
+      (ok (eq 'first (firstzero '(0 1 2))))
+      (ok (eq 'second (firstzero '(-1 0 1))))
+      (ok (eq 'third (firstzero '(-2 -1 0))))
+      (ok (eq 'none (firstzero '(1 2 3)))))))
+
+(deftest ex4.13
+  (testing "how-compute"
+    (flet ((how-compute (x1 x2 answer)
+             (cond ((= answer (+ x1 x2)) 'sum-of)
+                   ((= answer (* x1 x2)) 'product-of)
+                   (t '(beats me)))))
+      (ok (eq 'sum-of (how-compute 44 2 46)))
+      (ok (eq 'product-of (how-compute 44 2 88)))
+      (ok (equal '(beats me) (how-compute 23 45 111))))))
