@@ -63,3 +63,62 @@
       (ok (eq 'sum-of (how-compute 44 2 46)))
       (ok (eq 'product-of (how-compute 44 2 88)))
       (ok (equal '(beats me) (how-compute 23 45 111))))))
+
+(deftest ex4.14
+  (testing "return values from AND (first nil arg, or last non-nil arg) & OR (first non-nil arg, or nil)"
+    (ok (eq 'foe (and 'fee 'fie 'foe)))
+    (ok (eq 'fee (or 'fee 'fie 'foe)))
+    (ok (eq 'foe (or nil 'foe nil)))
+    (ok (null (and 'fee 'fie nil)))
+    (ok (eq 'yes (and (equal 'abc 'abc) 'yes)))
+    (ok (eq t (or (equal 'abc 'abc) 'yes)))))
+
+
+(deftest ex4.15
+  (testing "geqp"
+    (flet ((geqp (x y) (>= x y)))
+      (ok (geqp 2 1))
+      (ng (geqp 1 2)))))
+
+(deftest ex4.16
+  (testing "by-two"
+    (flet ((by-two (x) (cond ((and (oddp x) (> x 0)) (* x x))
+                             ((and (oddp x) (minusp x)) (* x 2))
+                             (t (/ x 2)))))
+      (ok (= 9 (by-two 3)))
+      (ok (= -6 (by-two -3)))
+      (ok (= 2 (by-two 4))))))
+
+(deftest ex4.17
+  (testing "sex-age-p"
+    (flet ((sex-age-p (sex age) (or
+                                 (and (eq age 'child) (or (eq sex 'boy) (eq sex 'girl)))
+                                 (and (eq age 'adult) (or (eq sex 'man) (eq sex 'woman))))))
+      (ok (sex-age-p 'boy 'child))
+      (ok (sex-age-p 'girl 'child))
+      (ok (sex-age-p 'man 'adult))
+      (ok (sex-age-p 'woman 'adult))
+      (ng (sex-age-p 'boy 'adult))
+      (ng (sex-age-p 'woman 'child)))))
+
+(deftest ex4.18
+  (testing "rochambeau"
+    (labels ((rochambeau (player1-pick player2-pick)
+               (cond ((left-wins player1-pick player2-pick) 'first-wins)
+                     ((left-wins player2-pick player1-pick) 'second-wins)
+                     (t 'tie)))
+             (left-wins (left right)
+               (or
+                 (combo left right 'rock 'scissors)
+                 (combo left right 'scissors 'paper)
+                 (combo left right 'paper 'rock)))
+             (combo (left right pick1 pick2) (and (eq left pick1) (eq right pick2))))
+      (ok (eq 'tie (rochambeau 'rock 'rock)))
+      (ok (eq 'first-wins (rochambeau 'rock 'scissors)))
+      (ok (eq 'second-wins (rochambeau 'rock 'paper)))
+      (ok (eq 'second-wins (rochambeau 'scissors 'rock)))
+      (ok (eq 'tie (rochambeau 'scissors 'scissors)))
+      (ok (eq 'first-wins (rochambeau 'scissors 'paper)))
+      (ok (eq 'first-wins (rochambeau 'paper 'rock)))
+      (ok (eq 'second-wins (rochambeau 'paper 'scissors)))
+      (ok (eq 'tie (rochambeau 'paper 'paper))))))
