@@ -122,3 +122,34 @@
       (ok (eq 'first-wins (rochambeau 'paper 'rock)))
       (ok (eq 'second-wins (rochambeau 'paper 'scissors)))
       (ok (eq 'tie (rochambeau 'paper 'paper))))))
+
+(deftest ex4.19
+  (testing "Do AND using COND"
+    (flet ((and-with-cond (x y z)
+             (cond ((not x) nil)
+                   ((not y) nil)
+                   ((not z) nil)
+                   (t z))))
+      (ng (and-with-cond nil nil nil))
+      (ng (and-with-cond nil nil 'z))
+      (ng (and-with-cond nil 'y nil))
+      (ng (and-with-cond nil 'y 'z))
+      (ng (and-with-cond 'x nil nil))
+      (ng (and-with-cond 'x nil 'z))
+      (ng (and-with-cond 'x 'y nil))
+      (ok (eq 'z (and-with-cond 'x 'y 'z)))))
+  (testing "Do AND using IF"
+    (flet ((and-with-if (x y z)
+             (if (not x) nil
+                 (if (not y) nil
+                     (if (not z) nil
+                         z)))))
+      (ng (and-with-if nil nil nil))
+      (ng (and-with-if nil nil 'z))
+      (ng (and-with-if nil 'y nil))
+      (ng (and-with-if nil 'y 'z))
+      (ng (and-with-if 'x nil nil))
+      (ng (and-with-if 'x nil 'z))
+      (ng (and-with-if 'x 'y nil))
+      (ok (eq 'z (and-with-if 'x 'y 'z))))))
+
