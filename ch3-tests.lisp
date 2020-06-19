@@ -1,9 +1,13 @@
 (in-package #:touretzky)
 
 (deftest sec3.8
-    (testing "some symbols are also values"
-             (ok (eq 't t))
-      (ok (eq 'nil nil))))
+    (testing "some symbols are also values, and have the value pointing (circularly) to themselves"
+      (ok (eq 't t))
+      (ok (eq 'nil nil)))
+  (testing "and some more from chapter 4 in Land of Lisp"
+    (ok (eq 'nil '()))
+    (ok (eq nil '()))
+    (ok (eq () '()))))
 
 (deftest ex3.15
   (testing "quotes and variables"
