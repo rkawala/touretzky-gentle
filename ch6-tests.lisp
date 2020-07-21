@@ -1,5 +1,9 @@
 (in-package #:touretzky)
 
+;;; Exercise 6.24 shows another way to test for set equality, but I
+;;; like mine too. It's less elegant, but it's easier to understand.
+(defun equal-unordered (expected actual) (equal expected (sort actual #'string-lessp)))
+
 (deftest early-ch6
   (testing "dot notation for car"
     (ok (equal '(w x y z) '(w . (x y z)))))
@@ -47,9 +51,9 @@
       (ok (eq 'a (first a-list)))
       (ok (eq final-cons (last a-list))))))
 
-(deftest simple
-  (testing "ex6.2 (nth returns the car...)"
-      (ok (signals (nth 3 '(a b c . d)) 'type-error)))
+(deftest ch6-exercises
+   (testing "ex6.2 (nth returns the car...)"
+     (ok (signals (nth 3 '(a b c . d)) 'type-error)))
   (testing "ex6.3 (... but last returns the entire cons cell)"
     (ok (equal '(rosebud) (last '(rosebud)))))
   (testing "ex6.4"
@@ -89,4 +93,49 @@
       (ng (palindromep '(a b)))))
   (testing "ex6.11"
     (flet ((make-palindrome (lst) (append lst (reverse lst))))
-      (ok (equal '(a b c c b a) (make-palindrome '(a b c)))))))
+      (ok (equal '(a b c c b a) (make-palindrome '(a b c))))))
+  (testing "ex6.13"
+    (ok (null (intersection '(a b) nil))))
+  (testing "ex6.14 (sort needed because intersection rearranges the list)"
+    (let ((my-set '(a b c)))
+      (ok (equal-unordered my-set (intersection my-set my-set)))))
+  (testing "ex6.16"
+    (ok (equal-unordered '(a b c) (union nil '(a b c)))))
+  (testing "ex6.17"
+    (let ((my-set '(a b c)))
+      (ok (equal-unordered my-set (union my-set my-set)))))
+  (testing "ex6.18"
+    (flet ((add-vowels (lst) (union lst '(a e i o u))))
+      (ok (equal-unordered '(a b c e i o u) (add-vowels '(a b c))))))
+  (testing "ex6.19"
+    (ok (null (set-difference nil '(a b c))))
+    (ok (equal '(a b c) (set-difference '(a b c) nil))))
+  (testing "ex6.21"
+    (flet ((my-subsetp (small big)
+             (null (set-difference small big))
+;;;          My first try was:             
+;;;          (eql (length (set-difference big small)) (- (length big) (length small)))
+             ))
+      (ok (null (my-subsetp '(a d) '(a b c))))
+      (ok (eq t (my-subsetp '(a b d) '(a b c d))))))
+  (testing "ex6.22"
+    (let ((a '(soap water)))
+      (ok (equal-unordered '(no radio soap water) (union a '(no soap radio))))
+      (ok (equal-unordered '(soap water) (intersection a (reverse a))))
+      (ok (equal '(soap) (set-difference a '(stop for water))))
+      (ok (null (set-difference a a)))
+      (ok (equal a (member 'soap a)))
+      (ok (equal '(water) (member 'water a)))
+      (ok (null (member 'washcloth a)))))
+  (testing "ex6.24"
+    (flet ((set-equal (lst1 lst2) (and (subsetp lst1 lst2) (subsetp lst2 lst1))))
+      (ok (set-equal '(a b) '(b a)))
+      (ok (set-equal nil nil))
+      (ng (set-equal '(a) '(b)))))
+  (testing "ex6.25"
+    (flet ((proper-subsetp (lst1 lst2) (and (subsetp lst1 lst2) (not (subsetp lst2 lst1)))))
+      (ok (proper-subsetp '() '(a)))
+      (ok (proper-subsetp '(a b) '(a b c d)))
+      (ng (proper-subsetp '(a b) '(b)))
+      (ng (proper-subsetp '(a b) '(a b)))
+      (ng (proper-subsetp '() '())))))
