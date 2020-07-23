@@ -51,7 +51,7 @@
       (ok (eq 'a (first a-list)))
       (ok (eq final-cons (last a-list))))))
 
-(deftest ch6-exercises
+(deftest ch6-exercises-part-1
    (testing "ex6.2 (nth returns the car...)"
      (ok (signals (nth 3 '(a b c . d)) 'type-error)))
   (testing "ex6.3 (... but last returns the entire cons cell)"
@@ -139,3 +139,21 @@
       (ng (proper-subsetp '(a b) '(b)))
       (ng (proper-subsetp '(a b) '(a b)))
       (ng (proper-subsetp '() '())))))
+
+;;; I'm not worrying about detecting that the separator might be missing.
+;;; This is a student exercise, not production-quality code.
+(deftest ex6.26
+  (let ((separator '-vs-))
+    (labels ((make-vs-list (lst1 lst2) (append lst1 (list separator) lst2))
+             (right-side (lst) (cdr (member separator lst)))
+             (left-side (lst) (if (eq separator (car lst)) nil (cons (car lst) (left-side (cdr lst)))))
+             (count-common (left right) (length (intersection left right)))
+             (compare (lst) (list (count-common (left-side lst) (right-side lst)) 'common 'features)))
+      (testing "right-side"
+        (ok (equal '(d e) (right-side (make-vs-list '(a b c) '(d e))))))
+      (testing "left-side"
+        (ok (equal '(a b c) (left-side (make-vs-list '(a b c) '(d e))))))
+      (testing "count-common"
+        (ok (eq 3 (count-common '(a b c d e) '(c d e f g)))))
+      (testing "compare"
+        (ok (equal '(3 common features) (compare '(a b c d e -vs- c d e f g))))))))
