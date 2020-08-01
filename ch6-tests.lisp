@@ -157,3 +157,63 @@
         (ok (eq 3 (count-common '(a b c d e) '(c d e f g)))))
       (testing "compare"
         (ok (equal '(3 common features) (compare '(a b c d e -vs- c d e f g))))))))
+
+(deftest ch6-exercises-the-rest
+  (testing "ex6.28"
+    (let ((produce '((apple . fruit) (celery . veggie) (banana . fruit) (lettuce . veggie))))
+      (ok (equal '(banana . fruit) (assoc 'banana produce)))
+      (ok (equal '(apple . fruit) (rassoc 'fruit produce)))
+      (ok (equal '(lettuce . veggie) (assoc 'lettuce produce)))
+      (ok (equal '(celery . veggie) (rassoc 'veggie produce)))))
+  (testing "ex6.30"
+           (setf *print-circle* t)
+           (let ((nerd-states '#0=(sleeping eating waiting-for-a-computer programming debugging . #0#)))
+             (labels ((nerdus (current-state)
+                        (cadr (find-state current-state nerd-states)))
+                      (sleepless (current-state)
+                        (let ((next-state (cdr (find-state current-state nerd-states))))
+                          (if (eq 'sleeping (car next-state)) (cadr next-state) (car next-state))))
+                      (nerd-on-caffeine (current-state)
+                        (caddr (find-state current-state nerd-states)))
+                      (find-state (state state-list) (find-state-internal state state-list state-list))
+                      (find-state-internal (state current-state beginning)
+                         (cond ((eq state (car current-state)) current-state)
+                               ((eq (cdr current-state) beginning) nil)
+                               (t (find-state-internal state (cdr current-state) beginning)))))
+               (ok (eq 'debugging (car (find-state 'debugging nerd-states))))
+               (ok (null (find-state 'no-such-state nerd-states)))
+               (ok (eq 'eating (nerdus 'sleeping)))
+               (ok (eq 'sleeping (nerdus 'debugging)))
+               (ok (eq 'eating (sleepless 'debugging)))
+               (ok (eq 'waiting-for-a-computer (sleepless 'eating)))
+               (ok (eq 'programming (nerd-on-caffeine 'eating))))))
+  ;; The solution in the back of the book doesn't work for lists shorter
+  ;; than two elements. This version fixes that.
+  (testing "ex6.36"
+    (flet ((swap-first-last (lst)
+             (let* ((a (reverse (cdr lst))))
+               (if a
+                   (cons (first a) (append (reverse (cdr a)) (list (first lst))))
+                   lst))))
+      (ok (null (swap-first-last '())))
+      (ok (equal '(one-element) (swap-first-last '(one-element))))
+      (ok (equal '(e2 e1) (swap-first-last '(e1 e2))))
+      (ok (equal '(e3 e2 e1) (swap-first-last '(e1 e2 e3))))
+      (ok (equal '(love cant buy you) (swap-first-last '(you cant buy love))))))
+  (testing "ex6.37"
+    (let ((x '(a b c d e)))
+      (flet ((rotate-left (lst) (append (cdr lst) (list (car lst))))
+             (rotate-right (lst) (append (last lst) (reverse (cdr (reverse lst))))))
+        (ok (equal '(b c d e a) (rotate-left x)))
+        (ok (equal '(e a b c d) (rotate-right x))))))
+  (testing "ex6.40"
+    (labels ((member-equiv (lst)
+               (cond ((null lst) '())
+                     (t (cons (list (car lst) lst) (member-equiv (cdr lst))))))
+             (do-assert (sym expected)
+               (ok (equal expected (cadr (assoc sym (member-equiv '(a b c d))))))))
+      (do-assert 'e nil)
+      (do-assert 'd '(d))
+      (do-assert 'c '(c d))
+      (do-assert 'b '(b c d))
+      (do-assert 'a '(a b c d)))))
